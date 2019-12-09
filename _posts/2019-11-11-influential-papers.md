@@ -26,7 +26,9 @@ layout: post
 * V. Mnih et al., ""Human-level control through deep reinforcement learning"", Nature, vol. 518, pp. 529-533, Feb. 2015.
 * [<A href='https://arxiv.org/abs/1804.02717'>url</a>]
 * A survey on Monte Carlo Tree Search
-* [<A href='http://yannakakis.net/wp-content/uploads/2012/03/gameAI.pdf'>url</a>]  [<a href='https://ieeexplore.ieee.org/abstract/document/5740836/'>url</a>] [<a href='https://ieeexplore.ieee.org/abstract/document/6855367/'>url</a>]
+* [<A href='http://yannakakis.net/wp-content/uploads/2012/03/gameAI.pdf'>url</a>]
+* [<A href='https://ieeexplore.ieee.org/abstract/document/5740836/'>url</a>]
+* [<A href='https://ieeexplore.ieee.org/abstract/document/6855367/'>url</a>]
 * A unified game theoretical approach to multiagent reinforcement learning
 * Open ended learning in symmetrical zero-sum games
 * Power to the people: The Role of Humans in Interactive Machine Learning ([<a href='https://wvvw.aaai.org/ojs/index.php/aimagazine/article/view/2513'>url</a>] )
