@@ -5,18 +5,25 @@ layout: post
 
 ### Which other topics do you work on?
 
-* Statistical forward planning, learning forward models, PCG
-* Computational models of intrinsic motivation to advance video game AI
-* Computational creativity applied to video games
-* Casual creators, computational creativity
-* Game AI for Real World problems
-* MCTS
-* Physically-based control
-* Computational Complexity and Theoretical Computer Science applied to Games
+* Statistical forward planning (MCTS, RHEA)
+* Learning forward models
 * Multiagent Reinforcement learning
-* Player Experience, Virtual Reality
-* Games for health
-* The development of methods  for combinatorial optimization and deep learning, and the automated generation of virtual players.
+* Deep learning
+* Automated generation of virtual players
+* Physically-based control
+* Computational models of intrinsic motivation to advance video game AI
+
+* PCG
+* Computational creativity (applied to video games)
+* Casual creators
 * Puzzle design
+* Game AI for Real World problems
+* Methods for combinatorial optimization
+
+* Computational Complexity applied to Games
+* Theoretical Computer Science applied to Games
+* Player Experience
+* Virtual Reality
+* Games for health
 
 <hr><center><img src='assets/png/q2-wordcloud.png' /></center>
