@@ -22,7 +22,7 @@ def file_to_content(f_path):
         lines = f.readlines()
         qs = lines[0].strip().split("\",\"")
         qs = [x.replace('"', '') for x in qs]
-        no_questions = len(qs)-cols_skip
+        no_questions = len(qs)
         ctn = [[] for _ in range(no_questions)]
 
         # Process all lines and put data in content list.
@@ -45,21 +45,21 @@ def file_to_content(f_path):
             if not line.startswith("\"") or line.startswith("\","):  # This is continuing answer from previous line
                 answer += ans[0]
                 if len(ans) > 1:  # There are more than this answer here, first add the answer and then process the rest
-                    if answer != "" and col_count >= cols_skip:
-                        ctn[col_count - cols_skip].append(answer)
+                    if answer != "" and col_count >= 0:
+                        ctn[col_count].append(answer)
                     col_count += 1
                     for i in range(1, len(ans)):  # Process these normally
                         a = ans[i]
                         if a.endswith("\n"):
                             answer = a  # Multi-line answer, continue to next line without increasing col count
                             continue
-                        if a != "" and col_count >= cols_skip:
-                            ctn[col_count - cols_skip].append(a)
+                        if a != "" and col_count >= 0:
+                            ctn[col_count].append(a)
                         col_count += 1
                 else:  # This is the only answer, check if it's ended and if so, add it to the list.
                     if line.endswith("\"\n"):  # Line ends here
-                        if answer != "" and col_count >= cols_skip:
-                            ctn[col_count - cols_skip].append(answer)
+                        if answer != "" and col_count >= 0:
+                            ctn[col_count].append(answer)
                         col_count += 1
 
             else:  # This is a new answer
@@ -67,8 +67,8 @@ def file_to_content(f_path):
                     if a.endswith("\n") and not a.endswith("\"\n"):
                         answer = a  # Multi-line answer, continue to next line without increasing col count
                         continue
-                    if a != "" and col_count >= cols_skip:
-                        ctn[col_count-cols_skip].append(a)
+                    if a != "" and col_count >= 0:
+                        ctn[col_count].append(a)
                     col_count += 1
     return qs, ctn
 
@@ -76,10 +76,11 @@ def file_to_content(f_path):
 questions, content = file_to_content(file_path)
 no_qs = len(content)
 
-for idx in range(no_qs):
+
+for idx in range(cols_skip, no_qs-cols_skip):
     # Calculate a month and day for the posts, these are used for indexing (order in which they appear on the website)
     month = 11
-    day = no_qs - idx + 1
+    day = no_qs - cols_skip - idx + 1
     if day > 28:  # TODO: Assumes maximum 56 questions, correct if adding more
         month = 12
         day -= 28
@@ -92,7 +93,7 @@ for idx in range(no_qs):
         else:
             multiple_choice(content[idx], q_title, idx, month, day)
     elif q_types[idx] == 1:
-        free_text(content[idx], q_title, idx, month, day)
+        free_text(content[idx], q_title, idx, month, day, content[0])
     # elif q_types[idx] == 2:
     #     short_text(content[idx], questions[cols_skip:][idx], idx, month, day)
     else:

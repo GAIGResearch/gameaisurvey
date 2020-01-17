@@ -37,7 +37,7 @@ layout: post
 * ACG
 * IJCAI
 * SOCS
-* CG
+* COG
 * Computer Games Workshop
 * Affective Computing and Intelligent Interaction
 * Conference on Simulation and AI in Computer Games (GAME-ON)

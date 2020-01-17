@@ -7,5 +7,3 @@ layout: post
 
 
 <center><img src='assets/png/q1.png' /></center>
-
-<hr><center><img src='assets/png/q1-wordcloud.png' /></center>

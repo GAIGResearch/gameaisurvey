@@ -1,10 +1,11 @@
-from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import numpy as np
 import re
 
+from py.wordcloud_gen import generate_wordcloud, save_wordcloud_fig
 
-repo_path = "../"
+repo_path = "../py/"
+date_from = "2020/01/17 0:00:00 AM GMT"
 
 
 def multiple_choice(cnt, q_title, idx, month, day, abrev=''):
@@ -20,8 +21,8 @@ def multiple_choice(cnt, q_title, idx, month, day, abrev=''):
     abrev_mapping = {}
 
     c = []
-    for con in cnt:
-        con_sp = con.split(';')
+    for i in range(len(cnt)):
+        con_sp = cnt[i].split(';')
         for con2 in con_sp:
             con_sp_sp = con2.split('\n')
             con_sp_sp = [x.strip() for x in con_sp_sp]
@@ -31,18 +32,8 @@ def multiple_choice(cnt, q_title, idx, month, day, abrev=''):
                 c.extend(con_sp_sp_sp)
 
     # Plot word cloud
-    wordcloud = WordCloud(width=300, height=300,
-                          background_color='white',
-                          stopwords=set(STOPWORDS),
-                          prefer_horizontal=1,
-                          min_font_size=4).generate(' '.join(c))
-    fig = plt.figure(figsize=(3, 3), facecolor=None)
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis("off")
-    plt.tight_layout(pad=0)
-    # plt.show()
-    plt.savefig(repo_path + "assets/png/q" + str(idx) + "-wordcloud.png")
-    plt.close(fig)
+    cloud = generate_wordcloud(' '.join(c))
+    save_wordcloud_fig(cloud, repo_path + "png/q" + str(idx) + "-wordcloud.png")
 
     # Create histogram data
     fig = plt.figure(figsize=(7, 7))
@@ -97,7 +88,7 @@ def multiple_choice(cnt, q_title, idx, month, day, abrev=''):
 
     # plt.show()
     plt.tight_layout()
-    plt.savefig(repo_path + "assets/png/q" + str(idx) + ".png")
+    plt.savefig(repo_path + "png/q" + str(idx) + ".png")
     plt.close(fig)
 
     # Spell out all content if abbreviated in plot
@@ -115,7 +106,7 @@ def multiple_choice(cnt, q_title, idx, month, day, abrev=''):
         f.write(post_frontmatter + post_content)
 
 
-def free_text(cnt, q_title, idx, month, day):
+def free_text(cnt, q_title, idx, month, day, timestamps):
     """
     Creates post for free text (long text) type question, given answers and question title
     """
@@ -127,33 +118,21 @@ def free_text(cnt, q_title, idx, month, day):
     post_frontmatter = "---\ntitle: " + short_title + "\nlayout: post\n---\n\n"
 
     # Plot word cloud
-    wordcloud = None
-    try:
-        wordcloud = WordCloud(width=300, height=300,
-                              background_color='white',
-                              stopwords=set(STOPWORDS),
-                              prefer_horizontal=1,
-                              min_font_size=4).generate(' '.join(cnt))
-        fig = plt.figure(figsize=(3, 3), facecolor=None)
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis("off")
-        plt.tight_layout(pad=0)
-        # plt.show()
-        plt.savefig(repo_path + "assets/png/q" + str(idx) + "-wordcloud.png")
-        plt.close(fig)
-    except:
-        print("Worldcloud error")
+    cloud = generate_wordcloud(' '.join(cnt))
+    save_wordcloud_fig(cloud, repo_path + "png/q" + str(idx) + "-wordcloud.png")
 
     # Process urls and split answers by '\n'
     c = []
-    for con in cnt:
-        link = re.findall('(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?', con)
-        links = [x[0] + "://" + x[1] + x[2] for x in link]
-        cc = con
-        for l in links:
-            cc = cc.replace(l, "[<a href='" + l + "'>url</a>]")
-        con_sp = cc.split('\n')
-        c.extend(con_sp)
+    for i in range(len(cnt)):
+        # Check if we should process this answer, only process if after date_from
+        if after_date_from(timestamps[i]):
+            link = re.findall('(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?', cnt[i])
+            links = [x[0] + "://" + x[1] + x[2] for x in link]
+            cc = cnt[i]
+            for l in links:
+                cc = cc.replace(l, "[<a href='" + l + "'>url</a>]")
+            con_sp = cc.split('\n')
+            c.extend(con_sp)
 
     # Check if answers repeat (or are included in other answers)
     illegal = []
@@ -195,3 +174,24 @@ def free_text(cnt, q_title, idx, month, day):
     with open(post_path, 'w+') as f:
         f.write(post_frontmatter + post_content)
 
+
+def after_date_from(timestamp):
+    """
+    Returns true if given timestamp is after date_from. Assumes same format, e.g.:
+    "2020/01/17 0:00:00 AM GMT"
+    """
+    y_this = int(timestamp[:4])
+    m_this = int(timestamp[5:7])
+    d_this = int(timestamp[8:10])
+    y_from = int(date_from[:4])
+    m_from = int(date_from[5:7])
+    d_from = int(date_from[8:10])
+    if y_this > y_from:
+        return True
+    if y_this == y_from:
+        if m_this > m_from:
+            return True
+        if m_this == m_from:
+            if d_this >= d_from:
+                return True
+    return False

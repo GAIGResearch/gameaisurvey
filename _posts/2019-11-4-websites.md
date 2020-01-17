@@ -22,6 +22,6 @@ layout: post
 * <a href='https://slack.com/'>https://slack.com/</a>
 
 * <a href='https://itch.io/'>https://itch.io/</a>
-* <a href='https://boardgamegeek.com'>https://boardgamegeek.com</a>
+* <a href='https://boardgamegeek.com/'>https://boardgamegeek.com</a>
 
 <hr><center><img src='assets/png/q16-wordcloud.png' /></center>
